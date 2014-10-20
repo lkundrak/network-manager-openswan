@@ -957,7 +957,7 @@ connect_step (NMOpenSwanPlugin *self, GError **error)
 		/* Start the IPSec service */
 		if (priv->libreswan) {
 			success = do_spawn (&priv->pid, NULL, NULL, error,
-			                    priv->pluto_path, "--config", SYSCONFDIR "/ipsec.conf", "--nofork",
+			                    priv->pluto_path, "--config", SYSCONFDIR "/ipsec.conf",
 			                    NULL);
 		} else
 			success = do_spawn (&priv->pid, NULL, NULL, error, priv->ipsec_path, "setup", "start", NULL);
