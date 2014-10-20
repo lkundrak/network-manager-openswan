@@ -78,6 +78,7 @@ typedef struct {
 typedef struct {
 	const char *ipsec_path;
 	const char *pluto_path;
+	const char *whack_path;
 	char *secrets_path;
 
 	gboolean libreswan;
@@ -384,9 +385,22 @@ static gboolean
 ipsec_stop (NMOpenSwanPlugin *self, GError **error)
 {
 	NMOpenSwanPluginPrivate *priv = NM_OPENSWAN_PLUGIN_GET_PRIVATE (self);
-	const char *argv[4] = { priv->ipsec_path, "setup", "stop", NULL };
+	const char *argv[4];
+	guint i = 0;
 
 	delete_secrets_file (self);
+
+	if (priv->libreswan) {
+		argv[i++] = priv->whack_path;
+		argv[i++] = "--shutdown";
+		argv[i++] = NULL;
+	} else {
+		argv[i++] = priv->ipsec_path;
+		argv[i++] = "setup";
+		argv[i++] = "stop";
+		argv[i++] = NULL;
+	}
+
 	return g_spawn_sync (NULL, (char **) argv, NULL, 0, NULL, NULL, NULL, NULL, NULL, error);
 }
 
@@ -1044,6 +1058,9 @@ _connect_common (NMVPNPlugin   *plugin,
 	if (priv->libreswan) {
 		priv->pluto_path = find_helper ("pluto", error);
 		if (!priv->pluto_path)
+			return FALSE;
+		priv->whack_path = find_helper ("whack", error);
+		if (!priv->whack_path)
 			return FALSE;
 	}
 
