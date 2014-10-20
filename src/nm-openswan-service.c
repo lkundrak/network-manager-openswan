@@ -255,28 +255,40 @@ nm_openswan_secrets_validate (NMSettingVPN *s_vpn, GError **error)
 static gboolean connect_step (NMOpenSwanPlugin *self, GError **error);
 static gboolean pr_cb (GIOChannel *source, GIOCondition condition, gpointer user_data);
 
-static const char *ipsec_paths[] =
-{
-	"/usr/sbin/ipsec",
-	"/sbin/ipsec",
-	"/usr/local/sbin/ipsec",
-	NULL
-};
-
 static const char *
-find_ipsec (GError **error)
+find_helper (const char *progname, GError **error)
 {
+	static const char *paths[] = {
+		PREFIX "/sbin/",
+		PREFIX "/bin/",
+		"/sbin/",
+		"/usr/sbin/",
+		"/usr/local/sbin/",
+		"/usr/bin/",
+		"/usr/local/bin/",
+	};
 	guint i;
+	GString *tmp;
+	const char *ret;
 
-	for (i = 0; i < G_N_ELEMENTS (ipsec_paths); i++) {
-		if (g_file_test (ipsec_paths[i], G_FILE_TEST_EXISTS))
-			return ipsec_paths[i];
+	if (error)
+		g_return_val_if_fail (*error == NULL, NULL);
+
+	tmp = g_string_sized_new (50);
+	for (i = 0; i < G_N_ELEMENTS (paths); i++) {
+		g_string_append_printf (tmp, "%s%s", paths[i], progname);
+		if (g_file_test (tmp->str, G_FILE_TEST_EXISTS)) {
+			ret = g_intern_string (tmp->str);
+			g_string_free (tmp, TRUE);
+			return ret;
+		}
+		g_string_set_size (tmp, 0);
 	}
+	g_string_free (tmp, TRUE);
 
-	g_set_error_literal (error,
-	                     NM_VPN_PLUGIN_ERROR,
-	                     NM_VPN_PLUGIN_ERROR_LAUNCH_FAILED,
-	                     "Could not find ipsec binary.");
+	g_set_error (error, NM_VPN_PLUGIN_ERROR, NM_VPN_PLUGIN_ERROR_LAUNCH_FAILED,
+	             "Could not find %s binary",
+	             progname);
 	return NULL;
 }
 
@@ -978,7 +990,7 @@ _connect_common (NMVPNPlugin   *plugin,
 		return FALSE;
 	}
 
-	priv->ipsec_path = find_ipsec (error);
+	priv->ipsec_path = find_helper ("ipsec", error);
 	if (!priv->ipsec_path)
 		return FALSE;
 
