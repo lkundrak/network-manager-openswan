@@ -8,6 +8,9 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_HEADERS([config.h])
 
+AC_USE_SYSTEM_EXTENSIONS
+AC_GNU_SOURCE
+
 dnl
 dnl Require programs
 dnl
