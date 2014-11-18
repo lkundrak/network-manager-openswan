@@ -1,6 +1,3 @@
-plugindir = $(libdir)/NetworkManager
-plugin_LTLIBRARIES = libnm-openswan-properties.la
-
 AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GTK_CFLAGS) \
@@ -13,16 +10,32 @@ AM_CPPFLAGS = \
 	-DVERSION=\"$(VERSION)\" \
 	-I${top_srcdir}
 
-libnm_openswan_properties_la_SOURCES = \
-	nm-openswan.c \
-	nm-openswan.h
+plugindir = $(libdir)/NetworkManager
+plugin_LTLIBRARIES = $(NULL)
 
-libnm_openswan_properties_la_LIBADD = \
-	$(GTK_LIBS) \
-	$(NM_LIBS)
+sources = nm-openswan.c nm-openswan.h
+libs = $(GTK_LIBS) $(NM_LIBS)
+ldflags = -avoid-version
 
-libnm_openswan_properties_la_LDFLAGS = \
-        -avoid-version
+if ENABLE_OPENSWAN
+plugin_LTLIBRARIES += libnm-openswan-properties.la
+libnm_openswan_properties_la_SOURCES = $(sources)
+libnm_openswan_properties_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-DDBUS_SERVICE=\"openswan\"
+libnm_openswan_properties_la_LIBADD = $(libs)
+libnm_openswan_properties_la_LDFLAGS = $(ldflags)
+endif
+
+if ENABLE_LIBRESWAN
+plugin_LTLIBRARIES += libnm-libreswan-properties.la
+libnm_libreswan_properties_la_SOURCES = $(sources)
+libnm_libreswan_properties_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-DDBUS_SERVICE=\"libreswan\"
+libnm_libreswan_properties_la_LIBADD = $(libs)
+libnm_libreswan_properties_la_LDFLAGS = $(ldflags)
+endif
 
 uidir = $(datadir)/gnome-vpn-properties/openswan
 ui_DATA = nm-openswan-dialog.ui

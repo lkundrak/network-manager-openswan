@@ -24,10 +24,6 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#define NM_DBUS_SERVICE_OPENSWAN    "org.freedesktop.NetworkManager.openswan"
-#define NM_DBUS_INTERFACE_OPENSWAN  "org.freedesktop.NetworkManager.openswan"
-#define NM_DBUS_PATH_OPENSWAN       "/org/freedesktop/NetworkManager/openswan"
-
 #define NM_OPENSWAN_RIGHT  "right"
 #define NM_OPENSWAN_LEFTID "leftid"
 #define NM_OPENSWAN_PSK_VALUE "pskvalue"

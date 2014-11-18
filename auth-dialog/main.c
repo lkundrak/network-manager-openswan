@@ -40,6 +40,9 @@
 
 #include "src/nm-openswan-service.h"
 
+#define NM_DBUS_SERVICE_OPENSWAN    "org.freedesktop.NetworkManager.openswan"
+#define NM_DBUS_SERVICE_LIBRESWAN   "org.freedesktop.NetworkManager.libreswan"
+
 #define KEYRING_UUID_TAG "connection-uuid"
 #define KEYRING_SN_TAG "setting-name"
 #define KEYRING_SK_TAG "setting-key"
@@ -452,7 +455,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 	textdomain (GETTEXT_PACKAGE);
 
-	context = g_option_context_new ("- openswan auth dialog");
+	context = g_option_context_new ("- IPSec auth dialog");
 	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
 
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {
@@ -468,8 +471,10 @@ main (int argc, char *argv[])
 		return 1;
 	}
 
-	if (strcmp (vpn_service, NM_DBUS_SERVICE_OPENSWAN) != 0) {
-		fprintf (stderr, "This dialog only works with the '%s' service\n", NM_DBUS_SERVICE_OPENSWAN);
+	if (   strcmp (vpn_service, NM_DBUS_SERVICE_OPENSWAN) != 0
+	    && strcmp (vpn_service, NM_DBUS_SERVICE_LIBRESWAN) != 0) {
+		fprintf (stderr, "This dialog only works with the '%s' and '%s' services\n",
+		         NM_DBUS_SERVICE_OPENSWAN, NM_DBUS_SERVICE_LIBRESWAN);
 		return 1;
 	}
 

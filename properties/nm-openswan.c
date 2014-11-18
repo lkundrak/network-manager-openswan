@@ -44,9 +44,9 @@
 #include "src/nm-openswan-service.h"
 #include "nm-openswan.h"
 
-#define OPENSWAN_PLUGIN_NAME    _("IPsec based VPN")
-#define OPENSWAN_PLUGIN_DESC    _("IPsec, IKEv1, IKEv2 based VPN")
-#define OPENSWAN_PLUGIN_SERVICE NM_DBUS_SERVICE_OPENSWAN 
+#define PLUGIN_NAME    _("IPsec based VPN")
+#define PLUGIN_DESC    _("IPsec, IKEv1, IKEv2 based VPN")
+#define PLUGIN_SERVICE "org.freedesktop.NetworkManager." DBUS_SERVICE
 
 #define ENC_TYPE_SECURE 0
 #define ENC_TYPE_WEAK   1
@@ -507,7 +507,7 @@ update_connection (NMVpnPluginUiWidgetInterface *iface,
 		return FALSE;
 
 	s_vpn = NM_SETTING_VPN (nm_setting_vpn_new ());
-	g_object_set (s_vpn, NM_SETTING_VPN_SERVICE_TYPE, NM_DBUS_SERVICE_OPENSWAN, NULL);
+	g_object_set (s_vpn, NM_SETTING_VPN_SERVICE_TYPE, PLUGIN_SERVICE, NULL);
 
 	/* Gateway */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "gateway_entry"));
@@ -585,7 +585,7 @@ nm_vpn_plugin_ui_widget_interface_new (NMConnection *connection, GError **error)
 
 	object = NM_VPN_PLUGIN_UI_WIDGET_INTERFACE (g_object_new (OPENSWAN_TYPE_PLUGIN_UI_WIDGET, NULL));
 	if (!object) {
-		g_set_error (error, OPENSWAN_PLUGIN_UI_ERROR, 0, "could not create openswan object");
+		g_set_error (error, OPENSWAN_PLUGIN_UI_ERROR, 0, "could not create UI object");
 		return NULL;
 	}
 
@@ -688,13 +688,13 @@ get_property (GObject *object, guint prop_id,
 {
 	switch (prop_id) {
 	case NM_VPN_PLUGIN_UI_INTERFACE_PROP_NAME:
-		g_value_set_string (value, OPENSWAN_PLUGIN_NAME);
+		g_value_set_string (value, PLUGIN_NAME);
 		break;
 	case NM_VPN_PLUGIN_UI_INTERFACE_PROP_DESC:
-		g_value_set_string (value, OPENSWAN_PLUGIN_DESC);
+		g_value_set_string (value, PLUGIN_DESC);
 		break;
 	case NM_VPN_PLUGIN_UI_INTERFACE_PROP_SERVICE:
-		g_value_set_string (value, OPENSWAN_PLUGIN_SERVICE);
+		g_value_set_string (value, PLUGIN_SERVICE);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

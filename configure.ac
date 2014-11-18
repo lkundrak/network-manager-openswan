@@ -96,6 +96,14 @@ if test x"$with_gnome" != xno; then
 	AC_SUBST(LIBSECRET_LIBS)
 fi
 
+AC_ARG_ENABLE(openswan, AS_HELP_STRING([--enable-openswan], [enable OpenSWAN support]),
+                     [enable_openswan=${enableval}], [enable_openswan=yes])
+AM_CONDITIONAL(ENABLE_OPENSWAN, test "${enable_openswan}" = "yes")
+
+AC_ARG_ENABLE(libreswan, AS_HELP_STRING([--enable-libreswan], [enable LibreSWAN support]),
+                     [enable_libreswan=${enableval}], [enable_libreswan=yes])
+AM_CONDITIONAL(ENABLE_LIBRESWAN, test "${enable_libreswan}" = "yes")
+
 dnl
 dnl Distribution version string
 dnl
@@ -110,7 +118,7 @@ AC_CONFIG_FILES([
 Makefile
 src/Makefile
 auth-dialog/Makefile
-auth-dialog/nm-openswan-auth-dialog.desktop.in
+auth-dialog/nm-swan-auth-dialog.desktop.in
 properties/Makefile
 po/Makefile.in
 ])

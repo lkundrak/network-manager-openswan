@@ -11,11 +11,11 @@ AM_CPPFLAGS = \
 	-DVERSION=\"$(VERSION)\" \
 	-I${top_srcdir}
 
-libexec_PROGRAMS = nm-openswan-auth-dialog
+libexec_PROGRAMS = nm-swan-auth-dialog
 
-nm_openswan_auth_dialog_SOURCES = main.c
+nm_swan_auth_dialog_SOURCES = main.c
 
-nm_openswan_auth_dialog_LDADD = \
+nm_swan_auth_dialog_LDADD = \
 	$(NM_LIBS) \
 	$(GTK_LIBS) \
 	$(NMGTK_LIBS) \
@@ -23,8 +23,8 @@ nm_openswan_auth_dialog_LDADD = \
 
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
-desktop_in_in_files = nm-openswan-auth-dialog.desktop.in.in
-desktop_in_files = nm-openswan-auth-dialog.desktop.in
+desktop_in_in_files = nm-swan-auth-dialog.desktop.in.in
+desktop_in_files = nm-swan-auth-dialog.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 EXTRA_DIST = \

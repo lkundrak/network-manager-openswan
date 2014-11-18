@@ -45,6 +45,8 @@
 #include "nm-openswan-service.h"
 #include "nm-utils.h"
 
+#define DBUS_SERVICE_NAME "org.freedesktop.NetworkManager." DBUS_SERVICE
+
 /* These are here because nm-dbus-glib-types.h isn't exported */
 #define DBUS_TYPE_G_ARRAY_OF_UINT          (dbus_g_type_get_collection ("GArray", G_TYPE_UINT))
 #define DBUS_TYPE_G_ARRAY_OF_ARRAY_OF_UINT (dbus_g_type_get_collection ("GPtrArray", DBUS_TYPE_G_ARRAY_OF_UINT))
@@ -55,10 +57,10 @@ helper_failed (DBusGConnection *connection, const char *reason)
 	DBusGProxy *proxy;
 	GError *err = NULL;
 
-	g_warning ("nm-openswan-service-helper did not receive a valid %s from openswan", reason);
+	g_warning ("helper did not receive a valid %s from openswan", reason);
 
 	proxy = dbus_g_proxy_new_for_name (connection,
-								NM_DBUS_SERVICE_OPENSWAN,
+								DBUS_SERVICE_NAME,
 								NM_VPN_DBUS_PLUGIN_PATH,
 								NM_VPN_DBUS_PLUGIN_INTERFACE);
 
@@ -84,7 +86,7 @@ send_ip4_config (DBusGConnection *connection, GHashTable *config)
 	GError *err = NULL;
 
 	proxy = dbus_g_proxy_new_for_name (connection,
-								NM_DBUS_SERVICE_OPENSWAN,
+								DBUS_SERVICE_NAME,
 								NM_VPN_DBUS_PLUGIN_PATH,
 								NM_VPN_DBUS_PLUGIN_INTERFACE);
 

@@ -44,6 +44,8 @@
 # define DIST_VERSION VERSION
 #endif
 
+#define DBUS_SERVICE_NAME "org.freedesktop.NetworkManager." DBUS_SERVICE
+
 #define NM_TYPE_OPENSWAN_PLUGIN (nm_openswan_plugin_get_type ())
 #define NM_OPENSWAN_PLUGIN(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), NM_TYPE_OPENSWAN_PLUGIN, NMOpenSwanPlugin))
 
@@ -1299,7 +1301,7 @@ main (int argc, char *argv[])
 	g_option_context_add_main_entries (opt_ctx, options, NULL);
 
 	g_option_context_set_summary (opt_ctx,
-		_("nm-openswan-service provides integrated IPsec VPN capability to NetworkManager."));
+		_("This service provides integrated IPsec VPN capability to NetworkManager."));
 
 	g_option_context_parse (opt_ctx, &argc, &argv, NULL);
 	g_option_context_free (opt_ctx);
@@ -1311,7 +1313,7 @@ main (int argc, char *argv[])
 		g_message ("%s (version " DIST_VERSION ") starting...", argv[0]);
 
 	plugin = g_object_new (NM_TYPE_OPENSWAN_PLUGIN,
-	                       NM_VPN_PLUGIN_DBUS_SERVICE_NAME, NM_DBUS_SERVICE_OPENSWAN,
+	                       NM_VPN_PLUGIN_DBUS_SERVICE_NAME, DBUS_SERVICE_NAME,
 	                       NULL);
 	if (!plugin)
 		exit (1);
