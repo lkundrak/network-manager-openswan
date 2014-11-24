@@ -565,7 +565,7 @@ nm_openswan_config_write (gint fd, NMConnection *connection, GError **error)
 	write_config_option (fd, " salifetime=24h\n");
 	write_config_option (fd, " ikelifetime=24h\n");
 	write_config_option (fd, " keyingtries=1\n");
-	write_config_option (fd, " auto=add\n");
+	write_config_option (fd, " auto=add");
 }
 
 static gboolean
