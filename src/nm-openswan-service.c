@@ -1052,6 +1052,20 @@ _connect_common (NMVPNPlugin   *plugin,
 	if (debug)
 		nm_connection_dump (connection);
 
+	priv->ipsec_path = find_helper ("ipsec", error);
+	if (!priv->ipsec_path)
+		return FALSE;
+
+	priv->libreswan = is_libreswan (priv->ipsec_path);
+	if (priv->libreswan) {
+		priv->pluto_path = find_helper ("pluto", error);
+		if (!priv->pluto_path)
+			return FALSE;
+		priv->whack_path = find_helper ("whack", error);
+		if (!priv->whack_path)
+			return FALSE;
+	}
+
 	ipsec_stop (self, NULL);
 
 	s_vpn = nm_connection_get_setting_vpn (connection);
@@ -1069,20 +1083,6 @@ _connect_common (NMVPNPlugin   *plugin,
 			                 NM_VPN_PLUGIN_ERROR_LAUNCH_FAILED,
 			                 "Already connecting!");
 		return FALSE;
-	}
-
-	priv->ipsec_path = find_helper ("ipsec", error);
-	if (!priv->ipsec_path)
-		return FALSE;
-
-	priv->libreswan = is_libreswan (priv->ipsec_path);
-	if (priv->libreswan) {
-		priv->pluto_path = find_helper ("pluto", error);
-		if (!priv->pluto_path)
-			return FALSE;
-		priv->whack_path = find_helper ("whack", error);
-		if (!priv->whack_path)
-			return FALSE;
 	}
 
 	priv->password = g_strdup (nm_setting_vpn_get_secret (s_vpn, NM_OPENSWAN_XAUTH_PASSWORD));
